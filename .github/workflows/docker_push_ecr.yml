@@ -31,8 +31,8 @@ jobs:
         context: .
         push: true
         tags: |
-          ghcr.io/charli3-official/odv-multisig-charli3-node-operator-backend:${{ github.ref_name }}
-          ${{ !contains(github.ref_name, '-') && 'ghcr.io/charli3-official/odv-multisig-charli3-node-operator-backend:latest' || '' }}
+          ghcr.io/charli3-official/charli3-pull-oracle-node:${{ github.ref_name }}
+          ${{ !contains(github.ref_name, '-') && 'ghcr.io/charli3-official/charli3-pull-oracle-node:latest' || '' }}
     - name: Update GHCR description
       if: github.event_name == 'release'
       env:
@@ -40,12 +40,12 @@ jobs:
       run: |
         RELEASE_DESCRIPTION=$(curl -H "Authorization: token $GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/charli3-official/odv-multisig-charli3-node-operator-backend/releases/latest | jq -r .body)
+          https://api.github.com/repos/charli3-official/charli3-pull-oracle-node/releases/latest | jq -r .body)
         ESCAPED_DESCRIPTION=$(echo "$RELEASE_DESCRIPTION" | sed 's/"/\\"/g')
         curl -X PATCH \
           -H "Authorization: Bearer $GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/user/packages/container/charli3-official/odv-multisig-charli3-node-operator-backend/versions/${{ github.ref_name }} \
+          https://api.github.com/user/packages/container/charli3-official/charli3-pull-oracle-node/versions/${{ github.ref_name }} \
           -d "{\"description\":\"$ESCAPED_DESCRIPTION\"}"
     - name: Build, tag as develop, and push Docker image to GHCR
       if: github.ref == 'refs/heads/develop'
@@ -53,4 +53,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/charli3-official/odv-multisig-charli3-node-operator-backend:develop
+        tags: ghcr.io/charli3-official/charli3-pull-oracle-node:develop
