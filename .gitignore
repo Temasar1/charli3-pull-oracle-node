@@ -1,6 +1,12 @@
-.DS_Store
-config-1.yml
-config-2.yml
+# Local / User-specific configs
+scratch/
+
+# Local environment / dependencies
+.venv_mamba/
+bin/
+
+# IDE settings
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -170,3 +176,6 @@ cython_debug/
 locust.yml
 tests/performance/results/*
 !tests/performance/results/.gitkeep
+
+# macOS specific
+.DS_Store

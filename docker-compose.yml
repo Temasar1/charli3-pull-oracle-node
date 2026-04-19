@@ -1,41 +1,32 @@
-name: odv-multisig-charli3-node-operator-v1
-
 services:
-  node1:
-    image: odv-multisig-charli3-node-operator-backend:latest
+  node-xau-1:
     build: .
-    ports:
-      - "8000:8000"
     volumes:
-      - ./config-1.yml:/app/config.yml
-    environment:
-      - PORT=8000
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-  node2:
-    image: odv-multisig-charli3-node-operator-backend:latest
+      - ./configs/config-xau-1.yml:/app/config.yml
     ports:
       - "8001:8000"
-    volumes:
-      - ./config-2.yml:/app/config.yml
-    environment:
-      - PORT=8000
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    command: python node/main.py run -c config.yml
 
-  locust:
-    build:
-      context: .
-      dockerfile: Dockerfile.locust
-    ports:
-      - "8089:8089"
+  node-xau-2:
+    build: .
     volumes:
-      - ./locust.yml:/app/locust.yml
-      - ./tests:/app/tests
-    command: locust -f /app/tests/performance/locustfiles/feed_endpoint.py
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    depends_on:
-      - node1
-      - node2
+      - ./configs/config-xau-2.yml:/app/config.yml
+    ports:
+      - "8002:8000"
+    command: python node/main.py run -c config.yml
+
+  node-xag-1:
+    build: .
+    volumes:
+      - ./configs/config-xag-1.yml:/app/config.yml
+    ports:
+      - "8003:8000"
+    command: python node/main.py run -c config.yml
+
+  node-xag-2:
+    build: .
+    volumes:
+      - ./configs/config-xag-2.yml:/app/config.yml
+    ports:
+      - "8004:8000"
+    command: python node/main.py run -c config.yml

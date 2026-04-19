@@ -53,13 +53,30 @@ class ChainQueryConfig:
     blockfrost: Optional[BlockfrostConfig] = None
     external: Optional[dict[str, Union[OgmiosConfig, BlockfrostConfig]]] = None
 
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ChainQueryConfig":
+        """Create ChainQueryConfig from dictionary."""
+        ogmios_data = data.get("ogmios")
+        ogmios = OgmiosConfig(**ogmios_data) if isinstance(ogmios_data, dict) else ogmios_data
+
+        blockfrost_data = data.get("blockfrost")
+        blockfrost = BlockfrostConfig(**blockfrost_data) if isinstance(blockfrost_data, dict) else blockfrost_data
+
+        return cls(
+            network=data["network"],
+            is_local_testnet=data.get("is_local_testnet", False),
+            ogmios=ogmios,
+            blockfrost=blockfrost,
+            external=data.get("external")
+        )
+
 
 @dataclass
 class UpdaterConfig:
     """Updater configuration."""
 
     verbosity: str = "INFO"
-    reward_collect_check_interval: float = 60  # seconds
+    reward_collect_check_interval: float = 600  # seconds
 
 
 @dataclass
@@ -194,7 +211,7 @@ class AppConfig:
             node=NodeConfig(**config.get("Node", {})),
             rate=RateConfig.from_dict(config.get("Rate", {})),
             updater=UpdaterConfig(**config.get("Updater", {})),
-            chain_query=ChainQueryConfig(**config.get("ChainQuery", {})),
+            chain_query=ChainQueryConfig.from_dict(config.get("ChainQuery", {})),
             reward_collection=RewardCollectionConfig(
                 **config.get("RewardCollection", {})
             ),

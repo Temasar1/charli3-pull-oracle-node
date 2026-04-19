@@ -31,9 +31,11 @@ logger = logging.getLogger(__name__)
 
 def setup_dendrite_backend(config):
     """Setup the backend based on the provided configuration."""
+    setup_network(config)
+
     # Extract chain configuration (blockfrost or ogmios)
     chain_query_config = config.chain_query
-    external_config = chain_query_config.external
+    external_config = chain_query_config.external or {}
 
     network = chain_query_config.network.lower()
 
@@ -41,11 +43,23 @@ def setup_dendrite_backend(config):
     if network == "testnet":
         # Handle testnet-specific setup
         blockfrost_config = external_config.get("blockfrost", {})
-        blockfrost_id = blockfrost_config.get("project_id")
+        blockfrost_id = blockfrost_config.get("project_id") or (
+            chain_query_config.blockfrost.project_id
+            if chain_query_config.blockfrost and hasattr(chain_query_config.blockfrost, 'project_id')
+            else (chain_query_config.blockfrost.get('project_id') if isinstance(chain_query_config.blockfrost, dict) else None)
+        )
 
         external_ogmios_config = external_config.get("ogmios", {})
-        external_ws_url = external_ogmios_config.get("ws_url")
-        external_kupo_url = external_ogmios_config.get("kupo_url")
+        external_ws_url = external_ogmios_config.get("ws_url") or (
+            chain_query_config.ogmios.ws_url
+            if chain_query_config.ogmios and hasattr(chain_query_config.ogmios, 'ws_url')
+            else (chain_query_config.ogmios.get('ws_url') if isinstance(chain_query_config.ogmios, dict) else None)
+        )
+        external_kupo_url = external_ogmios_config.get("kupo_url") or (
+            chain_query_config.ogmios.kupo_url
+            if chain_query_config.ogmios and hasattr(chain_query_config.ogmios, 'kupo_url')
+            else (chain_query_config.ogmios.get('kupo_url') if isinstance(chain_query_config.ogmios, dict) else None)
+        )
 
         # If external Ogmios or Blockfrost configuration is provided, use those
         if external_ws_url and external_kupo_url:
@@ -105,7 +119,7 @@ def setup_blockfrost_context(
         return BlockFrostChainContext(
             blockfrost_config.project_id,
             network,
-            base_url=blockfrost_config.base_url or "",
+            base_url=blockfrost_config.api_url if blockfrost_config.api_url else None,
         )
 
     return None
@@ -199,8 +213,8 @@ def load_keys(config: AppConfig) -> list:
     hdwallet = HDWallet.from_mnemonic(config.node.mnemonic)
 
     # Generate node keys (for signing oracle feed)
-    # using purpose 4343 (m / purpose' / coin_type' / account' / role / index)
-    node_hdwallet = hdwallet.derive_from_path("m/4343'/1815'/0'/0/0")
+    # using purpose 1852 (m / purpose' / coin_type' / account' / role / index)
+    node_hdwallet = hdwallet.derive_from_path("m/1852'/1815'/0'/0/0")
     node_feed_sk = ExtendedSigningKey.from_hdwallet(node_hdwallet)
     node_feed_vk: VerificationKey = VerificationKey.from_primitive(
         node_hdwallet.public_key[:32]

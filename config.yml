@@ -1,0 +1,74 @@
+Updater:
+  verbosity: INFO
+  reward_collect_check_interval: 180 # seconds
+
+Cache:
+  enabled: true
+  ttl: 60 # seconds
+
+RewardCollection:
+  trigger_amount: 500
+  reward_destination_address: "base"
+  create_collateral: true
+
+Node:
+  mnemonic: cute emerge mixed expose spider can street mountain explain soup reopen wagon soldier account spot buddy cream evolve inherit alone pledge treat myth coil
+  oracle_currency: 899eaef62a0d76b4202ca4b6fa81f629e1ab6208f9299d155b093a42
+  oracle_address: addr_test1wpt8lyduep82jux8cd7nec86m4cp0p4ndlfn0eudsgw436ge783e3
+  # leave reward_token_* fields empty for ada oracle rewards
+  reward_token_hash: c9c4ada29e8640077a03ec2a6982f867f356ba1d7e25d19232372828
+  reward_token_name: "546573744333" # "TestC3" in hex
+
+Rate:
+  general_base_symbol: STUFF-ADA
+  general_quote_symbol: ADA-USD
+  base_currency:
+    dexes:
+      - adapter: charli3-dendrite
+        asset_a: 51a5e236c4de3af2b8020442e2a26f454fda3b04cb621c1294a0ef34424f4f4b
+        asset_b: lovelace
+        quote_required: true
+        sources:
+          - minswapv2
+          - vyfi
+          - wingriders
+          - sundaeswapv3
+          - muesliswap
+  quote_currency:
+    cexes:
+      - adapter: ccxt
+        asset_a: ADA
+        asset_b: USDT
+        quote_required: false
+        quote_calc_method: multiply
+        sources:
+          - binance
+          - kucoin
+          - bitmart
+          - coinbase
+          - mexc
+          - lbank
+          - huobi
+          - okx
+          - bitget
+
+ChainQuery:
+  network: TESTNET
+
+  ogmios:
+    ws_url: ws://localhost:1337
+    kupo_url: http://localhost:1442
+
+  external:
+    ogmios:
+      ws_url: ws://mainnet-ws-url
+      kupo_url: http://mainnet-kupo-url
+
+ReferenceScript:
+  # The address where the reference script UTXO is locked
+  address: "addr_test1..."
+
+  # The specific UTXO containing the reference script
+  utxo_reference:
+    transaction_id: "YOUR_REFERENCE_SCRIPT_TX_HASH"
+    output_index: 0

@@ -120,13 +120,6 @@ class OdvService:
 
             validate_timestamp(tx_validity_interval.model_dump(), timestamp)
 
-            await validate_is_node_registered(
-                self.tx_manager,
-                self.oracle_addr,
-                oracle_nft_policy_id,
-                self.node_feed_vk.hash(),
-            )
-
             # Get and process rate
             rate, _ = await self.rate_aggregator.fetch_aggregate_rates()
             if rate is None:

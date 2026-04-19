@@ -1,0 +1,51 @@
+Updater:
+  verbosity: INFO
+  reward_collect_check_interval: 180
+
+Cache:
+  enabled: true
+  ttl: 60
+
+RewardCollection:
+  trigger_amount: 500
+  reward_destination_address: "base"
+  create_collateral: true
+
+Node:
+  mnemonic: "rotate loyal pilot rude sing stage lamp gaze series cram earth advance defy lemon obscure inside shy draft leisure boy night type giant focus"
+  oracle_currency: "63fb25158563dd7e45300fe997604f00579f14dacc3edc414e8d8755"
+  oracle_address: "addr_test1wr85y8c4gh7gdugdewhdrgfgjgcl3utxrqfpgk5j85kdv4svjyshw"
+  reward_token_hash: ""
+  reward_token_name: ""
+
+Rate:
+  general_base_symbol: XAU-USD
+  base_currency:
+    api_sources:
+      - adapter: generic-api
+        asset_a: XAU
+        asset_b: USD
+        sources:
+          - name: GoldAPI
+            api_url: "https://www.goldapi.io/api/XAU/USD"
+            json_path: ["price"]
+            headers:
+              "x-access-token": "goldapi-axj7fmsmo4v6l0g-io"
+          - name: MetalPriceAPI
+            api_url: "https://api.metalpriceapi.com/v1/latest?api_key=b046a7d433135df7d80ff923b31eb577&base=USD&currencies=XAU"
+            json_path: ["rates", "USDXAU"]
+            headers: {}
+
+ChainQuery:
+  network: TESTNET
+  blockfrost:
+    project_id: ""
+
+ReferenceScript:
+  # The address where the reference script UTXO is locked
+  address: "addr_test1qrva62tmq406czwdvennztql7n38fa6n66t205ucsrds4h6t53h5sf345n569735xszw47zpk5nxaxfzcpuema20fdnst77hln"
+
+  # The specific UTXO containing the reference script
+  utxo_reference:
+    transaction_id: "c91654160a2d539266f80998632e8825832a8264567f2e1281dbd935f8d975ab"
+    output_index: 0

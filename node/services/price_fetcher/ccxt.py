@@ -116,11 +116,6 @@ class CCXTAdapter(BaseAdapter):
         except Exception as e:
             logger.error(f"Error fetching from {exchange_id}: {str(e)}")
             return None
-        finally:
-            try:
-                await exchange.close()
-            except Exception:
-                pass
 
     async def close(self) -> None:
         """Close all exchange connections."""
